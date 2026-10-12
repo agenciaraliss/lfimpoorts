@@ -1,0 +1,10 @@
+/* LF Impoorts | módulo 81-quickshop-fix */
+(function(){LF.add('quickshop-fix',function(){var m=LF.$('#quickshop-modal');if(!m||m.dataset.lf2)return;m.dataset.lf2=1;
+var fix=function(){LF.$$('.js-item-name',m).forEach(function(n){if(n.querySelector('.lf-qn'))return;var r=LF.cleanName(n.textContent);n.innerHTML=(r.tags[0]?'<small class="lf-tag">'+r.tags[0]+'</small>':'')+'<span class="lf-qn">'+LF.esc(r.name)+'</span>'});
+ LF.$$('input.js-addtocart',m).forEach(function(b){if(/^comprar$/i.test(b.value.trim()))b.value='Adicionar à sacola'})};
+var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(fix,10)}).observe(m,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['value','class']});fix();
+LF.css('lf-qsfix-css','#quickshop-modal .modal-close{width:42px!important;height:42px!important;padding:0!important;margin:0!important;border-radius:50%!important;border:1px solid rgba(20,18,16,.12)!important;display:flex!important;align-items:center!important;justify-content:center!important;line-height:0!important;background:#fff!important}#quickshop-modal .modal-close svg{width:15px!important;height:15px!important;margin:0!important;position:static!important;fill:#141210}#quickshop-modal .modal-close>*{margin:0!important}'+
+'#quickshop-modal .js-addtocart,#quickshop-modal .js-addtocart-placeholder,#quickshop-modal .btn-add-to-cart{height:52px!important;border-radius:30px!important;background:#141210!important;border:0!important;color:#f5f0e7!important;font-family:'+LF.BF+'!important;font-size:11.5px!important;letter-spacing:.2em!important;text-transform:uppercase!important;font-weight:500!important;width:100%;box-shadow:none!important}'+
+'#quickshop-modal .js-addtocart.d-none,#quickshop-modal .js-addtocart-placeholder.d-none,#quickshop-modal .js-addtocart-success.d-none.d-none{display:none!important}'+
+'#quickshop-modal .js-addtocart-success{background:linear-gradient(120deg,#b8924a,#e6cf98 50%,#b8924a)!important;color:#141210!important}#quickshop-modal .js-addtocart-placeholder svg,#quickshop-modal .js-addtocart-success svg{fill:currentColor;width:16px;height:16px;margin-left:8px}');
+})})();

@@ -1,0 +1,2 @@
+/* LF Impoorts | módulo 86-cart-var */
+(function(){LF.add('cart-var',function(){var c=LF.$('#modal-cart');if(!c||c.dataset.lfv)return;c.dataset.lfv=1;var f=function(){LF.$$('.js-cart-item .cart-item-name span.font-small, .js-cart-item a small',c).forEach(function(s){if(s.dataset.lf)return;s.dataset.lf=1;var t=s.textContent.trim().replace(/^\((.*)\)$/,'$1').replace(/\s*\((.*)\)\s*$/,' · $1');s.textContent=t;s.style.display='block'})};f();new MutationObserver(function(){setTimeout(f,40)}).observe(c,{childList:true,subtree:true})})})();

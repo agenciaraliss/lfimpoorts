@@ -1,0 +1,2 @@
+/* LF Impoorts | módulo 94-drawer-names */
+(function(){LF.add('drawer-names',function(){var x=document.getElementById('lf-dw');if(!x||x.dataset.cn||!LF.cleanName)return;x.dataset.cn=1;var fix=function(){LF.$$('.ar em:not([data-c])',x).forEach(function(e){e.setAttribute('data-c','1');try{var c=LF.cleanName(e.textContent.trim());if(c&&c.name)e.textContent=c.name}catch(_){}})};new MutationObserver(fix).observe(x,{childList:true,subtree:true});fix()})})();

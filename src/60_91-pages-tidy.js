@@ -1,0 +1,2 @@
+/* LF Impoorts | módulo 91-pages-tidy */
+(function(){LF.add('pages-tidy',function(){LF.$$('#lf-pg .txi > p, .lf-sec p').forEach(function(p){if(!p.textContent.replace(/ /g,'').trim()&&!p.querySelector('img,iframe,video'))p.classList.add('lf-hid2')});LF.css('lf-pages-tidy','#lf-pg .qph{position:relative}#lf-pg .tx .txi>*:last-child{margin-bottom:0}@media(max-width:860px){#lf-pg .tx.qsw{gap:6px!important}#lf-pg .qph{position:relative!important;top:auto!important;width:230px;margin:0 auto 26px!important}}')})})();

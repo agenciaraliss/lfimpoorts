@@ -1,0 +1,2 @@
+/* LF Impoorts | módulo 89-cart-divider */
+(function(){LF.add('cart-divider',function(){LF.css('lf-cartdiv-css','#modal-cart .cart-subtotals-container{border-bottom:0!important;padding-bottom:2px!important;margin-bottom:0!important}#modal-cart .cart-totals-divider{margin:12px 0!important;border-color:#ece5da!important}#modal-cart .cart-subtotals-container>*{margin-bottom:0!important}#modal-cart .cart-subtotals-container .js-coupon-discount-row{margin:0!important}#modal-cart .js-cart-total-container{margin-top:0!important;padding-top:0!important}')})})();

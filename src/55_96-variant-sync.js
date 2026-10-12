@@ -1,0 +1,5 @@
+/* LF Impoorts | módulo 96-variant-sync */
+(function(){
+/* sincroniza a variacao escolhida no layout com a variacao nativa (a que vai pra sacola) */
+LF.syncNativeVariant=function(det,opt){if(!det||opt==null)return;var a=LF.$$('a[data-option],button[data-option]',det).filter(function(b){return b.getAttribute('data-option')===opt})[0];if(a&&!a.classList.contains('selected'))a.click();var s=det.querySelector('select[name="variation[0]"]');if(s&&s.value!==opt){s.value=opt;s.dispatchEvent(new Event('change',{bubbles:true}))}};
+LF.add('variant-sync',function(){if(LF.tpl()!=='product'||window.__lfVS)return;window.__lfVS=1;document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#lf-pp .vb button');if(!b)return;var det=document.getElementById('single-product')||LF.$('.js-product-detail');var V=[];try{V=JSON.parse(det.getAttribute('data-variants')||(det.querySelector('[data-variants]')||{getAttribute:function(){return '[]'}}).getAttribute('data-variants'))}catch(x){}var v=V[+b.dataset.i];if(v)setTimeout(function(){LF.syncNativeVariant(det,v.option0)},30)},true)})})();

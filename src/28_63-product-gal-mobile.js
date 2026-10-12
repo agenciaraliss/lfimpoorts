@@ -1,0 +1,9 @@
+/* LF Impoorts | módulo 63-product-gal-mobile */
+(function(){LF.add('product-gal-mobile',function(){var mn=LF.$('#lf-pp .mn');if(!mn||mn.querySelector('.ga'))return;var tr=mn.querySelector('.tr');var n=mn.querySelectorAll('.sl').length;if(n<2)return;
+mn.insertAdjacentHTML('beforeend','<button type="button" class="ga gp" aria-label="Foto anterior">'+LF.ico.chev+'</button><button type="button" class="ga gn" aria-label="Próxima foto">'+LF.ico.chev+'</button><span class="gc"><b>1</b> / '+n+'</span>');
+var go=function(d){var i=Math.round(tr.scrollLeft/tr.clientWidth)+d;i=Math.max(0,Math.min(n-1,i));tr.scrollTo({left:tr.clientWidth*i,behavior:'smooth'})};
+mn.querySelector('.gp').onclick=function(){go(-1)};mn.querySelector('.gn').onclick=function(){go(1)};
+var up=function(){var i=Math.round(tr.scrollLeft/tr.clientWidth);mn.querySelector('.gc b').textContent=i+1;mn.querySelector('.gp').disabled=i===0;mn.querySelector('.gn').disabled=i===n-1};tr.addEventListener('scroll',up,{passive:true});up();
+LF.css('lf-ppgal-css','#lf-pp .ga,#lf-pp .gc{display:none}@media(max-width:900px){#lf-pp .ga{display:flex;position:absolute;top:50%;margin-top:-20px;z-index:3;width:40px;height:40px;border-radius:50%;border:1px solid rgba(20,18,16,.1);background:rgba(255,255,255,.9);backdrop-filter:blur(6px);align-items:center;justify-content:center;box-shadow:0 8px 20px -12px rgba(0,0,0,.4);transition:opacity .3s;padding:0}#lf-pp .ga svg{width:15px;height:15px;fill:none;stroke:#141210;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}#lf-pp .gp{left:10px}#lf-pp .gp svg{transform:rotate(180deg)}#lf-pp .gn{right:10px}#lf-pp .ga:disabled{opacity:0;pointer-events:none}'+
+'#lf-pp .gc{display:block;position:absolute;right:12px;bottom:12px;z-index:3;padding:4px 10px;border-radius:12px;background:rgba(20,18,16,.75);color:#f5f0e7;font-size:11px;letter-spacing:.06em}#lf-pp .gc b{color:#e6cf98;font-weight:600}#lf-pp .dt{bottom:16px}}');
+})})();
