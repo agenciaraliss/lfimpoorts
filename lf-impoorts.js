@@ -368,7 +368,7 @@ LF.add('cards-eq',function(){LF.css('lf-cardeq-css',
 '.lf-card .mi-w-full:not(.lf-norate){display:none!important}')})})()}catch(e){console.warn("[LF] 15-head-icons",e)}
 /* ---- 30-paraelas ---- */
 try{(function(){
-LF.cfg=LF.cfg||{};LF.cfg.pe={elas:'https://i.ibb.co/7xpQBN17/Luxury-Perfume-Trio-on-Golden-Gradient.png',eles:'https://i.ibb.co/qMSs8pj5/Luxury-Fragrances-in-Golden-Light.png'};
+LF.cfg=LF.cfg||{};LF.cfg.pe={elas:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-elas.webp',eles:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-eles.webp'};
 LF.add('paraelas',function(){
 if(LF.tpl()!=='home'||LF.$('#lf-pe'))return;
 var anchor=LF.$('.js-section-products-best-seller')||LF.$('.js-section-products-new');if(!anchor)return;
@@ -548,7 +548,7 @@ LF.css('lf-ar-css','#lf-ar{background:#fbf9f6;padding:90px 24px;font-family:'+LF
 })})()}catch(e){console.warn("[LF] 40-aromas",e)}
 /* ---- 41-atacado-qs ---- */
 try{(function(){
-LF.cfg=LF.cfg||{};LF.cfg.qsImg=LF.cfg.qsImg||'https://i.ibb.co/PG2sWyMp/Whats-App-Image-2026-10-09-at-14-36-47.jpg';
+LF.cfg=LF.cfg||{};LF.cfg.qsImg=LF.cfg.qsImg||'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/cliente-quem-somos.webp';
 LF.add('quemsomos',function(){if(LF.tpl()!=='home'||LF.$('#lf-qs'))return;var HF=LF.HF;var foot=LF.$('footer');if(!foot)return;
 var sec=document.createElement('section');sec.id='lf-qs';
 sec.innerHTML='<div class="qi"><div class="qf"><div class="qa"><img alt="Fundadora" referrerpolicy="no-referrer" src="'+LF.cfg.qsImg+'"></div><span class="qo"></span></div><div class="qt"><small>Quem somos</small><h2 class="qh">Um sonho que virou a sua perfumaria</h2><p class="qp"></p><blockquote class="qq"></blockquote><ol class="ql"></ol><a class="qb" href="/quem-somos/"><span>Conheça nossa história</span>'+LF.ico.arr+'</a></div></div>';
@@ -610,7 +610,7 @@ LF.css('lf-at-css','#lf-at{background:#fff;padding:80px 24px 10px;font-family:'+
 /* ---- 36-pe-imgfit ---- */
 try{(function(){LF.add('pe-imgfit',function(){LF.css('lf-pefit-css','#lf-pe .bi img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important;max-width:none!important;object-fit:cover!important;object-position:center 60%}#lf-pe .bn{background:#e9d9bd}')})})()}catch(e){console.warn("[LF] 36-pe-imgfit",e)}
 /* ---- 05-preload ---- */
-try{(function(){LF.cfg=LF.cfg||{};var R={elas:'https://i.ibb.co/7xpQBN17/Luxury-Perfume-Trio-on-Golden-Gradient.png',eles:'https://i.ibb.co/qMSs8pj5/Luxury-Fragrances-in-Golden-Light.png'};LF.cfg.pe={};Object.keys(R).forEach(function(k){var c=null;try{c=localStorage.getItem('lf:img:'+k)}catch(e){}LF.cfg.pe[k]=c||R[k]})})()}catch(e){console.warn("[LF] 05-preload",e)}
+try{(function(){LF.cfg=LF.cfg||{};var R={elas:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-elas.webp',eles:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-eles.webp'};LF.cfg.pe={};Object.keys(R).forEach(function(k){LF.cfg.pe[k]=R[k]})})()}catch(e){console.warn("[LF] 05-preload",e)}
 /* ---- 37-pe-motion ---- */
 try{(function(){LF.add('pe-motion',function(){
 var pe=LF.$('#lf-pe');if(!pe)return;var tr=pe.querySelector('.tr');
