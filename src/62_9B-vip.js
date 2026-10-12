@@ -1,0 +1,32 @@
+/* LF Impoorts | módulo 9B-vip */
+(function(){
+/* Grupo VIP: a cliente cadastrou como "produto" com o link do WhatsApp na descricao.
+   O link e lido de la (vinculado ao painel); o "produto" some das vitrines/busca. */
+var isVipName=function(t){return /grupo\s*vip/i.test(t||'')};
+LF.vip=function(){if(LF._vipP)return LF._vipP;var K='lf:vip';try{var c=JSON.parse(localStorage.getItem(K)||'null');if(c&&c.t>Date.now()-6*36e5&&c.link)return LF._vipP=Promise.resolve(c)}catch(e){}
+ var cat=[].slice.call(document.querySelectorAll('a[href]')).map(function(a){return a.getAttribute('href')}).filter(function(h){return /vip/i.test(h)&&!/\/produtos\//.test(h)&&!/wa\.me|whatsapp/.test(h)})[0];
+ LF._vipP=(cat?LF.fetchDoc(cat).then(function(d){var a=d.querySelector('.js-item-product a[href*="/produtos/"]');return a?{cat:cat,prod:a.getAttribute('href')}:{cat:cat}}):Promise.resolve({})).then(function(o){if(!o.prod)return o;return LF.fetchDoc(o.prod).then(function(pd){var l=pd.querySelector('a[href*="chat.whatsapp.com"]');o.link=l?l.getAttribute('href'):'';return o})}).then(function(o){o.t=Date.now();if(o.link){try{localStorage.setItem(K,JSON.stringify(o))}catch(e){}}return o}).catch(function(){return {}});return LF._vipP};
+var gem='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M6 4h12l4 5-10 11L2 9z"/><path d="M2 9h20M9 4l3 16 3-16M6 4l3 5 3-5 3 5 3-5"/></svg>';
+var arr='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12h13M13 7l5 5-5 5"/></svg>';
+var strip=function(link){var s=document.createElement('section');s.className='lfv3';s.innerHTML='<div class="in"><span class="gm">'+gem+'</span><p><b>Grupo VIP LF</b><span>Ofertas especiais e promoções exclusivas no WhatsApp</span></p><a href="'+link+'" target="_blank" rel="noopener">Quero entrar'+arr+'</a></div>';return s};
+LF.add('vip',function(){
+ /* esconde o "produto" VIP de vitrines, categorias e busca */
+ var hide=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){var n=c.querySelector('.js-item-name,.lf-nm');if(n&&isVipName(n.textContent))c.style.display='none'})};hide();
+ if(!window.__lfVipMo){window.__lfVipMo=1;new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){if(n.nodeType===1)hide(n.parentNode||n)})})}).observe(document.body,{childList:true,subtree:true})}
+ LF.$$('.lf-sres a, #lf-msr .rs a').forEach(function(a){if(isVipName(a.textContent))a.style.display='none'});
+ LF.vip().then(function(o){if(!o||!o.link)return;var link=o.link,t=LF.tpl();
+  /* menu desktop e celular */
+  [['#lf-dw .ft','dw'],['#lf-mdw .ft','mdw']].forEach(function(p){var ft=LF.$(p[0]);if(!ft||ft.querySelector('.lf-vipm'))return;var a=document.createElement('a');a.className='lf-vipm';a.href=link;a.target='_blank';a.rel='noopener';a.innerHTML='<span class="g">'+gem+'</span><span class="t"><b>Grupo VIP LF</b><i>Ofertas exclusivas no WhatsApp</i></span>'+arr;ft.insertBefore(a,ft.firstChild)});
+  /* menu do painel: item "Grupo VIP" abre o grupo direto */
+  LF.$$('a[href]').forEach(function(a){var h=a.getAttribute('href')||'';if(o.cat&&LF.path(h)===LF.path(o.cat)&&!a.closest('.lfv3,.lf-vipm')){a.setAttribute('href',link);a.target='_blank';a.rel='noopener'}});
+  /* home: faixa acima do rodape */
+  if(t==='home'&&!LF.$('.lfv3')){var ft=LF.$('footer');if(ft)ft.parentNode.insertBefore(strip(link),ft)}
+  /* pagina do "produto" VIP e da categoria VIP: mostra o convite no lugar */
+  var onVip=(o.prod&&LF.path(location.href)===LF.path(o.prod))||(o.cat&&LF.path(location.href)===LF.path(o.cat));
+  if(onVip&&!LF.$('.lfv3.pg')){var s=strip(link);s.classList.add('pg');var tgt=LF.$('#lf-pp')||LF.$('.js-product-table')||LF.$('#lf-ctb');if(tgt){var host=tgt.closest('#lf-pp')||tgt.parentElement;host.parentNode.insertBefore(s,host);if(LF.$('#lf-pp'))LF.$('#lf-pp').style.display='none';LF.$$('#lf-ctb, #lf-more').forEach(function(e){e.style.display='none'})}}
+ });
+ LF.css('lf-vip-css','.lfv3{padding:30px 20px 60px;background:#f4f2ef;font-family:'+LF.BF+'}.lfv3.pg{padding:40px 20px 70px}.lfv3 *{box-sizing:border-box}.lfv3 .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:22px 30px;border-radius:60px;background:#faf7f2;border:1px solid rgba(201,169,97,.45)}.lfv3 .gm{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:#141210;color:#e6cf98;display:flex;align-items:center;justify-content:center}.lfv3 .gm svg{width:20px;height:20px}.lfv3 p{flex:1;margin:0;display:flex;flex-direction:column;gap:2px}.lfv3 p b{font-family:'+LF.HF+';font-weight:400;font-size:21px;color:#141210}.lfv3 p span{font-size:13.5px;color:#7a736a}.lfv3 a{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 24px;border-radius:30px;border:1px solid #141210;color:#141210!important;text-decoration:none!important;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;transition:all .3s}.lfv3 a:hover{background:#141210;color:#e6cf98!important}.lfv3 a svg{width:15px;height:15px}'+
+ '.lf-vipm{display:flex!important;align-items:center;gap:12px!important;padding:12px 14px!important;margin:0 0 10px;border-radius:16px;background:#141210;color:#f5f0e7!important;text-decoration:none!important;border:1px solid rgba(201,169,97,.35)}.lf-vipm .g{flex:0 0 32px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(217,189,124,.5);display:flex;align-items:center;justify-content:center;color:#e6cf98}.lf-vipm .g svg{width:16px!important;height:16px!important;stroke:#e6cf98!important}.lf-vipm .t{flex:1;display:flex;flex-direction:column;line-height:1.25}.lf-vipm b{font-family:'+LF.HF+';font-weight:400;font-size:15.5px;color:#f5f0e7}.lf-vipm i{font-style:normal;font-size:11.5px;color:#a59e93}.lf-vipm>svg{width:16px!important;height:16px!important;stroke:#d9bd7c!important}.lf-vipm:hover{border-color:#c9a961}'+
+ '#lf-dw .lf-vipm{margin:0 0 14px}@media(max-height:780px){#lf-dw .pn{padding-top:22px!important;padding-bottom:22px!important}#lf-dw .top{margin-bottom:14px!important}#lf-dw nav .c{padding-top:11px!important;padding-bottom:11px!important;font-size:21px!important}#lf-dw .ft{padding-top:16px!important}#lf-dw .ft a:not(.lf-vipm){padding:7px 0!important}}'+
+ '@media(max-width:767px){.lfv3{padding:20px 14px 40px}.lfv3 .in{flex-wrap:wrap;border-radius:22px;padding:20px}.lfv3 a{width:100%;justify-content:center}}');
+})})();

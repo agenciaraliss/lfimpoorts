@@ -1,6 +1,6 @@
 /* LF Impoorts | módulo 41-atacado-qs */
 (function(){
-LF.cfg=LF.cfg||{};LF.cfg.qsImg=LF.cfg.qsImg||'https://i.ibb.co/PG2sWyMp/Whats-App-Image-2026-10-09-at-14-36-47.jpg';
+LF.cfg=LF.cfg||{};LF.cfg.qsImg=LF.cfg.qsImg||'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/cliente-quem-somos.webp';
 LF.add('quemsomos',function(){if(LF.tpl()!=='home'||LF.$('#lf-qs'))return;var HF=LF.HF;var foot=LF.$('footer');if(!foot)return;
 var sec=document.createElement('section');sec.id='lf-qs';
 sec.innerHTML='<div class="qi"><div class="qf"><div class="qa"><img alt="Fundadora" referrerpolicy="no-referrer" src="'+LF.cfg.qsImg+'"></div><span class="qo"></span></div><div class="qt"><small>Quem somos</small><h2 class="qh">Um sonho que virou a sua perfumaria</h2><p class="qp"></p><blockquote class="qq"></blockquote><ol class="ql"></ol><a class="qb" href="/quem-somos/"><span>Conheça nossa história</span>'+LF.ico.arr+'</a></div></div>';

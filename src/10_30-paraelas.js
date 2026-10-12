@@ -1,6 +1,6 @@
 /* LF Impoorts | módulo 30-paraelas */
 (function(){
-LF.cfg=LF.cfg||{};LF.cfg.pe={elas:'https://i.ibb.co/7xpQBN17/Luxury-Perfume-Trio-on-Golden-Gradient.png',eles:'https://i.ibb.co/qMSs8pj5/Luxury-Fragrances-in-Golden-Light.png'};
+LF.cfg=LF.cfg||{};LF.cfg.pe={elas:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-elas.webp',eles:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-eles.webp'};
 LF.add('paraelas',function(){
 if(LF.tpl()!=='home'||LF.$('#lf-pe'))return;
 var anchor=LF.$('.js-section-products-best-seller')||LF.$('.js-section-products-new');if(!anchor)return;
