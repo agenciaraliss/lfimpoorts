@@ -1,0 +1,5 @@
+/* LF Impoorts — anti-piscada (colar no campo de CSS do tema: Personalizar > Edição de CSS)
+   Esconde a loja até o layout novo estar montado. Trava de segurança: aparece sozinha em 2,5s. */
+html:not(.lf-ready) body{opacity:0;animation:lfshow .3s ease 2.5s forwards}
+html.lf-ready body{opacity:1;transition:opacity .35s ease}
+@keyframes lfshow{to{opacity:1}}
