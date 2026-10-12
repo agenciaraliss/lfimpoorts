@@ -1,7 +1,9 @@
 /* LF Impoorts — layout personalizado (Nuvemshop / tema Recife)
    Agência Raliss · Sites com a Lari */
 (function(){
+var show=function(){document.documentElement.classList.add("lf-ready")};
 var boot=function(){
+try{
 /* ---- 00-core ---- */
 try{(function(){
 if(window.LF&&window.LF.__booted)return;
@@ -1154,8 +1156,7 @@ try{(function(){LF.add('pages-tidy',function(){LF.$$('#lf-pg .txi > p, .lf-sec p
 /* ---- 9A-responsive-fix ---- */
 try{(function(){LF.add('responsive-fix',function(){LF.css('lf-resp-fix',"@media(max-width:860px){#lf-pp .pg{grid-template-columns:minmax(0,1fr)!important}#lf-pp .pg>*{min-width:0!important}}#lf-pp .pg>*{min-width:0}@media(max-width:1279px){#lf-pe .ar.nx{right:6px!important}#lf-pe .ar.pv{left:6px!important}}#lf-pp .vb:not(:has(>button:nth-child(4))){grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}#lf-pp .vb button{min-width:0}@media(max-width:400px){#lf-pp .vb button{padding-left:8px!important;padding-right:8px!important;gap:6px!important}#lf-pp .vb .vt em{font-size:9.5px!important;letter-spacing:0!important}#lf-pp button.add{letter-spacing:.12em!important;font-size:10px!important;white-space:nowrap!important;padding-left:12px!important;padding-right:12px!important}#lf-pp button.add span{white-space:nowrap}}")})})()}catch(e){console.warn("[LF] 9A-responsive-fix",e)}
 window.LF&&LF.run&&LF.run();
-var show=function(){document.documentElement.classList.add("lf-ready")};
-if(window.requestAnimationFrame)requestAnimationFrame(function(){requestAnimationFrame(show)});else show();
+}finally{show()}
 };
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
