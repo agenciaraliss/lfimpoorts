@@ -15,8 +15,9 @@ sec.innerHTML='<div class="pi"><div class="tb"><span class="th"></span>'+tabs.ma
 anchor.parentNode.insertBefore(sec,anchor);
 var tr=sec.querySelector('.tr'),th=sec.querySelector('.th'),bt=LF.$$('.tb button',sec),bar=sec.querySelector('.pg i'),all2=sec.querySelector('.all');
 var out=function(p){var s=p.querySelector('.js-stock-label');return s&&/esgotad/i.test(s.textContent)&&!/display:\s*none/.test(s.getAttribute('style')||'')};
-var load=function(i){var t=tabs[i];all2.href=t.h;tr.classList.add('wipe');
- LF.fetchDoc(t.h).then(function(d){var P=LF.$$('.js-item-product',d).filter(function(p){return !out(p)}).slice(0,10);
+var request=0;
+var load=function(i){var ticket=++request,t=tabs[i];all2.href=t.h;tr.classList.add('wipe');
+ LF.fetchDoc(t.h).then(function(d){if(ticket!==request)return;var P=LF.$$('.js-item-product',d).filter(function(p){return !out(p)}).slice(0,10);
   tr.innerHTML='';P.forEach(function(p,k){var n=document.importNode(p,true);n.className='js-item-product lf-pec';tr.appendChild(n);if(k===0){var b=document.createElement('div');b.className='bn';b.innerHTML='<div class="bi" style="background-image:url(\''+t.img+'\')"></div><span class="fr"></span>';tr.appendChild(b)}});
   LF.cardify(tr);tr.scrollLeft=0;upd();requestAnimationFrame(function(){tr.classList.remove('wipe')})})};
 var move=function(){var b=bt.filter(function(x){return x.classList.contains('on')})[0];th.style.width=b.offsetWidth+'px';th.style.transform='translateX('+(b.offsetLeft-4)+'px)'};

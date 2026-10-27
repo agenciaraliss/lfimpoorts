@@ -1,6 +1,23 @@
 /* LF Impoorts | módulo 21-cards */
 (function(){
-LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){if(c.dataset.lfc)return;var item=c.querySelector('.item')||c;var desc=c.querySelector('.item-description');if(!desc)return;c.dataset.lfc=1;c.classList.add('lf-card');
+
+/* Start featured photos before their cards enter the viewport. Keep the
+   secondary hover photo and the Nuvemshop purchase controls untouched. */
+LF.prepareCardImage=function(card){
+var im=card.querySelector('img.item-image-featured');if(!im||im.dataset.lfPhoto)return;
+var ss=im.getAttribute('data-srcset');if(!ss)return;im.dataset.lfPhoto='1';
+var reveal=function(){
+ var seen={},set=ss.split(',').map(function(x){return x.trim()}).filter(function(x){var u=x.split(/\s+/)[0];if(!u||seen[u])return false;seen[u]=1;return true}).join(', ');
+ var width=im.clientWidth||(card.clientWidth)|| (LF.mobile()?180:280);
+ im.setAttribute('sizes',Math.ceil(width)+'px');im.decoding='async';im.loading='eager';
+ im.setAttribute('srcset',set);var u=LF.imgOf(im,'480');if(u)im.setAttribute('src',u);
+ im.classList.remove('lazyload','lazyloading','lazyautosizes');im.classList.add('lazyloaded');
+};
+if(!window.IntersectionObserver){reveal();return}
+var io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){io.disconnect();reveal()}},{rootMargin:'600px'});io.observe(im);
+};
+
+LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){LF.prepareCardImage(c);if(c.dataset.lfc)return;var item=c.querySelector('.item')||c;var desc=c.querySelector('.item-description');if(!desc)return;c.dataset.lfc=1;c.classList.add('lf-card');
  var nm=c.querySelector('.js-item-name');if(nm){var r=LF.cleanName(nm.textContent);nm.innerHTML=(r.tags[0]?'<small class="lf-tag">'+r.tags[0]+'</small>':'')+'<span class="lf-nm">'+LF.esc(r.name)+'</span>';var imc=c.querySelector('.js-product-item-image-container-private, .item-image');if(imc&&r.badges.length&&!imc.querySelector('.lf-badge'))imc.insertAdjacentHTML('beforeend','<span class="lf-badge">'+r.badges[0]+'</span>')}
  LF.$$('span',c).forEach(function(s){if(/^\(0\)$/.test(s.textContent.trim())){var w=s.closest('.mi-w-full')||s.parentElement;w.classList.add('lf-norate')}});
  var pd=c.querySelector('.js-payment-discount-price-product-container');
