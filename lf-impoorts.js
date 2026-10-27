@@ -378,10 +378,13 @@ LF.css('lf-cards-css',
 '.lf-card>.item{height:auto!important;width:100%;flex:1 1 auto!important;box-shadow:0 3px 10px -8px rgba(40,30,15,.14),0 0 0 1px rgba(20,18,16,.035)!important}'+
 '.lf-card:hover>.item{transform:none!important}'+
 '.lf-card .js-product-container,.lf-card .item-description,.lf-card .item-description>a.item-link{flex:1 1 auto!important}'+
-'.lf-card .item-description{min-height:212px!important;box-sizing:border-box!important}'+
-'.lf-card .lf-buyw{margin-top:auto!important;flex-shrink:0!important}'+
-'.lf-card .js-item-name{min-height:0!important}'+
-'.lf-card .item-price-container{min-height:0!important;margin:8px 0 12px!important;line-height:1.35!important}'+
+'.lf-card .item-description{min-height:184px!important;box-sizing:border-box!important}'+
+'.lf-card .lf-buyw{margin-top:0!important;flex-shrink:0!important}'+
+'.lf-card .js-item-name{margin:0!important;min-height:51px!important}'+
+'.lf-card .item-price-container{position:relative;min-height:60px!important;justify-content:flex-end!important;margin:auto 0 10px!important;line-height:1.35!important}'+
+'.lf-card .item-price-container .labels{position:absolute!important;right:0;top:19px}'+
+'.lf-card .item-price-container .js-offer-label{font-size:9px!important;padding:1px 4px!important}'+
+'.lf-card .item-price-container .price-compare{align-self:flex-start}'+
 '.lf-card .item-price-container>*,.lf-card .item-price-container .d-block{line-height:1.35!important}'+
 '.lf-card .js-item-image-padding:has(.product-item-slider-slide:nth-child(2)){margin-bottom:24px!important}'+
 '.lf-card .product-item-slider-container:has(.product-item-slider-slide:nth-child(2)){overflow:visible!important;clip-path:inset(0 0 -24px 0)}'+
