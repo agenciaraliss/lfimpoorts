@@ -17,6 +17,26 @@ if(!window.IntersectionObserver){reveal();return}
 var io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){io.disconnect();reveal()}},{rootMargin:'600px'});io.observe(im);
 };
 
+/* Mobile rows scroll natively; keep the theme Swiper from consuming the gesture.
+   The saved settings are restored when the desktop breakpoint is reached. */
+var mobileRows=window.matchMedia('(max-width:767px)'),rowSettings=new WeakMap(),rowGestures=new WeakSet();
+LF.syncMobileRows=function(){
+ LF.$$('.swiper-wrapper.swiper-mobile-only').forEach(function(row){
+  if(!rowGestures.has(row)){rowGestures.add(row);var start=0,dragged=false;
+   row.addEventListener('touchstart',function(){start=row.scrollLeft;dragged=false},{passive:true});
+   row.addEventListener('scroll',function(){if(Math.abs(row.scrollLeft-start)>6)dragged=true},{passive:true});
+   row.addEventListener('click',function(e){if(mobileRows.matches&&dragged&&e.detail){e.preventDefault();e.stopPropagation();dragged=false}},true);
+  }
+  var sw=row.parentElement&&row.parentElement.swiper;if(!sw||sw.destroyed||!sw.params)return;
+  if(mobileRows.matches){
+   if(!rowSettings.has(sw))rowSettings.set(sw,{move:sw.allowTouchMove,prevent:sw.params.touchStartPreventDefault});
+   sw.allowTouchMove=false;sw.params.touchStartPreventDefault=false;
+  }else if(rowSettings.has(sw)){var saved=rowSettings.get(sw);sw.allowTouchMove=saved.move;sw.params.touchStartPreventDefault=saved.prevent;rowSettings.delete(sw)}
+ });
+};
+if(mobileRows.addEventListener)mobileRows.addEventListener('change',LF.syncMobileRows);else mobileRows.addListener(LF.syncMobileRows);
+window.addEventListener('load',LF.syncMobileRows);
+
 LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){LF.prepareCardImage(c);if(c.dataset.lfc)return;var item=c.querySelector('.item')||c;var desc=c.querySelector('.item-description');if(!desc)return;c.dataset.lfc=1;c.classList.add('lf-card');
  var nm=c.querySelector('.js-item-name');if(nm){var r=LF.cleanName(nm.textContent);nm.innerHTML=(r.tags[0]?'<small class="lf-tag">'+r.tags[0]+'</small>':'')+'<span class="lf-nm">'+LF.esc(r.name)+'</span>';var imc=c.querySelector('.js-product-item-image-container-private, .item-image');if(imc&&r.badges.length&&!imc.querySelector('.lf-badge'))imc.insertAdjacentHTML('beforeend','<span class="lf-badge">'+r.badges[0]+'</span>')}
  LF.$$('span',c).forEach(function(s){if(/^\(0\)$/.test(s.textContent.trim())){var w=s.closest('.mi-w-full')||s.parentElement;w.classList.add('lf-norate')}});
@@ -29,12 +49,12 @@ LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(funct
  var link=(c.querySelector('a.item-link')||c.querySelector('a[href*="/produtos/"]'));
  if(out){c.classList.add('lf-out');var n=(nm&&nm.querySelector('.lf-nm'))?nm.querySelector('.lf-nm').textContent:'';var im=c.querySelector('.js-product-item-image-container-private, .item-image');if(im&&!im.querySelector('.lf-veil'))im.insertAdjacentHTML('beforeend','<div class="lf-veil"><span class="a">Esgotado</span><span class="b">Te avisamos quando voltar</span></div>');var wl=LF.waLink('Olá! Quero ser avisada quando o '+n+' voltar ao estoque 🤍');bw.innerHTML='<a class="lf-buy lf-notify" href="'+(wl||(link?link.getAttribute('href'):'#'))+'" target="_blank" rel="noopener">'+LF.ico.bell+'<span>Avise-me quando chegar</span></a>'}
  else{bw.innerHTML='<button type="button" class="lf-buy">'+LF.ico.bag+'<span>Comprar</span></button>';bw.firstChild.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var q=c.querySelector('.js-quickshop-modal-open');if(q)q.click();else if(link)location.href=link.getAttribute('href')})}
- desc.appendChild(bw)})};
-LF.add('cards',function(){LF.cardify();var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(function(){LF.cardify()},120)}).observe(document.body,{childList:true,subtree:true});
+ desc.appendChild(bw)});LF.syncMobileRows()};
+LF.add('cards',function(){LF.cardify();[300,1200,3500].forEach(function(ms){setTimeout(LF.syncMobileRows,ms)});var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(function(){LF.cardify()},120)}).observe(document.body,{childList:true,subtree:true});
 LF.css('lf-cards-css',
 '.lf-card{font-family:'+LF.BF+'}'+
-'.lf-card>.item{position:relative;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 16px 34px -26px rgba(40,30,15,.45),0 0 0 1px rgba(20,18,16,.035);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;height:100%;display:flex;flex-direction:column;margin:0!important}'+
-'.lf-card:hover>.item{transform:translateY(-5px);box-shadow:0 28px 46px -26px rgba(40,30,15,.5),0 0 0 1px rgba(201,169,97,.25)}'+
+'.lf-card>.item{position:relative;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px -10px rgba(40,30,15,.18),0 0 0 1px rgba(20,18,16,.035);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;height:100%;display:flex;flex-direction:column;margin:0!important}'+
+'.lf-card:hover>.item{transform:translateY(-2px);box-shadow:0 7px 18px -12px rgba(40,30,15,.22),0 0 0 1px rgba(201,169,97,.18)}'+
 '.lf-card .js-product-container{display:flex;flex-direction:column;flex:1}'+
 '.lf-card .item-image{background:#fff}'+
 '.lf-card .item-description{flex:1;display:flex!important;flex-direction:column;text-align:center;padding:14px 14px 0!important;margin:0!important}'+
@@ -70,7 +90,21 @@ LF.css('lf-cards-css',
 '.lf-card.lf-out:hover .lf-veil .b{opacity:1;transform:none}'+
 '.lf-card .item-image img{transition:opacity .5s}'+
 '@media(max-width:767px){'+
-'html body .swiper-wrapper.swiper-mobile-only{display:flex!important;transform:none!important;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;gap:12px;padding:6px 16px 22px!important;margin:0!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;width:auto!important;box-sizing:border-box}'+
+'html body .swiper-wrapper.swiper-mobile-only{display:flex!important;transform:none!important;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;touch-action:pan-x pan-y;overscroll-behavior-x:contain;gap:12px;padding:6px 16px 22px!important;margin:0!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;width:auto!important;box-sizing:border-box}'+
+'html body .swiper-wrapper.swiper-mobile-only{height:auto!important;align-items:stretch!important}'+
+'html body .swiper-wrapper.swiper-mobile-only>.js-item-product{height:auto!important}'+
+'.lf-card{display:flex!important;flex-direction:column!important;align-items:stretch!important}'+
+'.lf-card>.item{height:auto!important;width:100%;flex:1 1 auto!important;box-shadow:0 3px 10px -8px rgba(40,30,15,.14),0 0 0 1px rgba(20,18,16,.035)!important}'+
+'.lf-card:hover>.item{transform:none!important}'+
+'.lf-card .js-product-container,.lf-card .item-description,.lf-card .item-description>a.item-link{flex:1 1 auto!important}'+
+'.lf-card .item-description{min-height:212px!important;box-sizing:border-box!important}'+
+'.lf-card .lf-buyw{margin-top:auto!important;flex-shrink:0!important}'+
+'.lf-card .js-item-name{min-height:0!important}'+
+'.lf-card .item-price-container{min-height:0!important;margin:8px 0 12px!important;line-height:1.35!important}'+
+'.lf-card .item-price-container>*,.lf-card .item-price-container .d-block{line-height:1.35!important}'+
+'.lf-card .js-item-image-padding:has(.product-item-slider-slide:nth-child(2)){margin-bottom:24px!important}'+
+'.lf-card .product-item-slider-container:has(.product-item-slider-slide:nth-child(2)){overflow:visible!important;clip-path:inset(0 0 -24px 0)}'+
+'.lf-card .product-item-slider-container:has(.product-item-slider-slide:nth-child(2)) .product-item-slider-pagination-container{bottom:-20px!important}'+
 'html body .swiper-wrapper.swiper-mobile-only::-webkit-scrollbar{display:none}'+
 'html body .swiper-wrapper.swiper-mobile-only>.js-item-product{flex:0 0 calc((100% - 44px)/2.15)!important;width:calc((100% - 44px)/2.15)!important;max-width:none!important;margin:0!important;scroll-snap-align:start;scroll-margin-left:16px}'+
 'html body .swiper-container:has(> .swiper-mobile-only){overflow:visible!important;margin:0 -15px!important}'+
