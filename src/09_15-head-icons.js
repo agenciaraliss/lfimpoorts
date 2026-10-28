@@ -13,5 +13,4 @@ LF.add('cards-eq',function(){LF.css('lf-cardeq-css',
 '.lf-card:hover>.item{transform:none!important}'+
 '.lf-card .item-image{flex:0 0 auto}'+
 '.lf-card .js-item-name{min-height:58px;display:flex;flex-direction:column;justify-content:flex-start}'+
-'.lf-card .item-price-container{min-height:72px;justify-content:flex-end}'+
-'.lf-card .mi-w-full:not(.lf-norate){display:none!important}')})})();
+'.lf-card .item-price-container{min-height:72px;justify-content:flex-end}')})})();

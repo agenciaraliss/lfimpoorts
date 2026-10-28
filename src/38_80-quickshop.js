@@ -6,7 +6,7 @@ LF.decoVariants=function(root){LF.$$('.js-product-variants-group',root).forEach(
  bs.forEach(function(b,k){var c=b.querySelector('.btn-variant-content')||b;if(c.dataset.lfv===labs[k]&&c.querySelector('.vt'))return;var full=labs[k];var m=full.match(/^(.*?\d+(?:[.,]\d+)?\s*ml)\s*[\(\-–]?\s*([^\)]*)\)?\s*$/i);var t1=full,t2='';if(m&&m[2]&&m[2].trim()){t1=m[1].trim();t2=m[2].trim()}var r=u.indexOf(vals[k]);var s=!vals[k]?0:(u.length<=1?2:Math.round(r/(u.length-1)*2)+1);b.dataset.s=s;b.title=full;
   c.innerHTML=(s?'<i class="vl"></i>':'')+'<span class="vt"><b>'+LF.esc(t1)+'</b>'+(t2?'<em>'+LF.esc(t2)+'</em>':'')+'</span>';c.dataset.lfv=full})})};
 LF.add('quickshop',function(){var m=LF.$('#quickshop-modal');if(!m||m.dataset.lf)return;m.dataset.lf=1;
- var deco=function(){LF.$$('span',m).forEach(function(s){var t=s.textContent.trim();if(/^\(0\)$/.test(t)){var w=s.closest('.mi-w-full')||s.parentElement;w.style.display='none'}if(t.toLowerCase()==='com'&&s.closest('.js-payment-discount-price-product-container'))s.style.display='none'});LF.decoVariants(m)};
+ var deco=function(){LF.$$('span',m).forEach(function(s){var t=s.textContent.trim();if(t.toLowerCase()==='com'&&s.closest('.js-payment-discount-price-product-container'))s.style.display='none'});LF.decoVariants(m)};
  var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(deco,30)}).observe(m,{childList:true,subtree:true,characterData:true});deco();
  var V=LF.vialSvg;
  LF.css('lf-qs-modal-css','#quickshop-modal{font-family:'+LF.BF+'}'+

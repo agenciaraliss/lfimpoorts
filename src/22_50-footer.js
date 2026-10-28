@@ -3,6 +3,12 @@
 var $=LF.$,$$=LF.$$,I=LF.ico,HF=LF.HF;var f=$('footer');if(!f||$('#lf-ft'))return;
 /* menus do painel */
 var groups=[],cur=null;$$('a',f).forEach(function(a){var h=a.getAttribute('href')||'';var t=a.textContent.trim();if(!t&&!a.querySelector('img'))return;var isHead=(!h||h==='#'||/javascript/.test(h))&&t&&!a.querySelector('img');if(isHead){cur={t:t,l:[]};groups.push(cur);return}if(cur)cur.l.push({t:t,h:h})});
+/* Current themes render headings as text, rather than anchor tags. */
+var panelGroups=[];$$('ul',f).forEach(function(ul){
+ var parent=ul.parentElement,heading=parent&&parent.querySelector(':scope > .font-big,:scope > h2,:scope > h3,:scope > h4');
+ if(!heading)return;var links=$$('a[href]',ul).map(function(a){return{t:a.textContent.trim(),h:a.getAttribute('href')}}).filter(function(a){return a.t});
+ if(links.length)panelGroups.push({t:heading.textContent.trim(),l:links});
+});if(panelGroups.length)groups=panelGroups;
 var contact=groups.filter(function(g){return /contato|atendimento/i.test(g.t)})[0];var menus=groups.filter(function(g){return g!==contact&&g.l.length&&!g.l.every(function(x){return /instagram|tiktok|facebook|youtube|pinterest|twitter/i.test(x.h)})}).slice(0,2);
 var all=$$('a',f);var phone='',mail='';all.forEach(function(a){var h=a.getAttribute('href')||'';if(/^tel:/.test(h)&&!phone)phone=a.textContent.trim();if(/^mailto:/.test(h)&&!mail)mail=h.replace('mailto:','')});
 var wa=LF.waLink();var waNum=LF.wa();var waTxt=phone||(waNum?waNum.replace(/^55(\d{2})(\d{4,5})(\d{4})$/,'$1 $2-$3'):'');
@@ -19,18 +25,46 @@ var ft=document.createElement('div');ft.id='lf-ft';
 var ck='<svg viewBox="0 0 24 24"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 ft.innerHTML='<section class="lf4-duo"><div class="lf4-in">'+
  (nl?'<div class="lf4-p lf4-nl"><div class="lf4-b"><small>Clube LF</small><h3>Novidades antes de todo mundo</h3><p>Seja a primeira a saber, direto no seu e-mail.</p><ul class="lf4-pk"><li>Lançamentos</li><li>Reposições</li><li>Cupons exclusivos</li></ul><form class="lf4-f" novalidate><input type="email" placeholder="Seu melhor e-mail" autocomplete="email" aria-label="Seu e-mail"><button type="submit"><span>Participar</span>'+I.arr+'</button></form><div class="lf4-ok">'+ck+'<span>Pronto! Você agora faz parte do Clube LF.</span></div><span class="lf4-err" aria-live="polite"></span></div></div>':'')+
- '<div class="lf4-p lf4-tr"><div class="lf4-b"><small>Rastreio Nuvem Envio</small><h3>Acompanhe sua entrega</h3><ol class="lf4-st"><li><i>'+I.check+'</i><span>Confirmado</span></li><li><i>'+I.box+'</i><span>Enviado</span></li><li><i>'+I.truck+'</i><span>A caminho</span></li><li><i><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8H4z"/><path d="M10 19v-5h4v5"/></svg></i><span>Entregue</span></li><b class="ln"><em></em></b></ol><form class="lf4-f lf4-tf" novalidate><input type="text" placeholder="Número do pedido" aria-label="Número do pedido"><button type="submit"><span>Rastrear</span>'+I.arr+'</button></form><span class="lf4-err" aria-live="polite"></span><a class="lf4-acc" href="/account/orders/">'+I.user+'<span>Tem cadastro? <b>Veja seus pedidos</b></span></a></div></div>'+
+ '<div class="lf4-p lf4-tr"><div class="lf4-b"><small>Rastreio Nuvem Envio</small><h3>Acompanhe sua entrega</h3><ol class="lf4-st"><li><i>'+I.check+'</i><span>Confirmado</span></li><li><i>'+I.box+'</i><span>Enviado</span></li><li><i>'+I.truck+'</i><span>A caminho</span></li><li><i><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8H4z"/><path d="M10 19v-5h4v5"/></svg></i><span>Entregue</span></li><b class="ln"><em></em></b></ol><form class="lf4-f lf4-tf" novalidate><input type="text" placeholder="Código de rastreio" aria-label="Código de rastreio"><button type="submit"><span>Rastrear</span>'+I.arr+'</button></form><span class="lf4-err" aria-live="polite"></span><a class="lf4-acc" href="/account/orders/">'+I.user+'<span>Tem cadastro? <b>Veja seus pedidos</b></span></a></div></div>'+
 '</div></section><div class="lf3-in"><div class="lf4-grid"><div class="lf4-brand"><a href="/" class="lf3-logo" aria-label="Início"><i></i></a><div class="lf3-soc">'+soc.map(function(s){return '<a href="'+s.h+'" target="_blank" rel="noopener" aria-label="'+s.k+'">'+SO[s.k]+'</a>'}).join('')+'</div></div>'+
  menus.map(function(g){return '<div class="lf3-col"><h4>'+LF.esc(g.t)+'</h4><ul>'+g.l.map(function(l){return '<li><a href="'+l.h+'">'+LF.esc(l.t)+'</a></li>'}).join('')+'</ul></div>'}).join('')+
  '<div class="lf3-col lf3-ct"><h4>'+LF.esc(contact?contact.t:'Atendimento').replace(/entre em contato/i,'Atendimento')+'</h4><ul>'+(wa?'<li><a href="'+wa+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9.3 8.6c.3-.6.7-.6 1-.6h.5c.2 0 .4.1.5.4l.7 1.6c.1.3 0 .5-.1.7l-.5.6c.6 1.2 1.6 2.1 2.8 2.7l.6-.5c.2-.2.5-.2.7-.1l1.6.7c.3.1.4.3.4.5v.5c0 .4-.2.8-.7 1-1 .4-2.6.1-4.3-1.4-1.6-1.5-2.4-3.1-2-4.5"/></svg><span>'+LF.esc(waTxt)+'</span></a></li>':'')+(mail?'<li><a href="mailto:'+mail+'">'+I.mail+'<span>'+LF.esc(mail)+'</span></a></li>':'')+'</ul></div></div>'+
  (pays.length?'<div class="lf3-pay"><span>Pagamento e envio</span><div class="lf3-pi">'+pays.map(function(u){return '<img src="'+u+'" alt="" loading="lazy">'}).join('')+'</div></div>':'')+
  '<div class="lf3-leg"><p><span>© '+year+' '+LF.esc(name)+'. Todos os direitos reservados.</span>'+(cnpj?'<b>·</b><span>CNPJ '+cnpj+'</span>':'')+'</p><div id="lari-wm-box"><a id="lari-wm" href="https://wa.me/message/IGGSZJCTRU67K1" target="_blank" rel="noopener" aria-label="Criado por Sites com a Lari"><span>Criado por</span><span class="lw"></span></a></div></div></div>';
-f.appendChild(ft);f.classList.add('lf-ftn');
+Array.prototype.forEach.call(f.children,function(n){if(!n.matches('.js-nubesdk-slot,[data-slot]'))n.classList.add('lf-native-footer')});f.appendChild(ft);f.classList.add('lf-ftn');
 /* comportamento */
-var nlb=ft.querySelector('.lf4-nl');if(nlb){var fm=nlb.querySelector('form'),er=nlb.querySelector('.lf4-err');fm.addEventListener('submit',function(e){e.preventDefault();var v=fm.querySelector('input').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){er.textContent='Confere o e-mail? Parece que falta algo.';return}er.textContent='';if(!window.__lfNoSubmit){var ni=nl.querySelector('input[type=email]');if(ni){ni.value=v;if(nl.requestSubmit)nl.requestSubmit();else nl.submit()}}nlb.classList.add('done')})}
-var tf=ft.querySelector('.lf4-tf'),ti=tf.querySelector('input'),te=ft.querySelector('.lf4-tr .lf4-err');ti.addEventListener('input',function(){te.textContent=''});tf.addEventListener('submit',function(e){e.preventDefault();var v=ti.value.replace(/^#/,'').trim();if(v.length<3){te.textContent='Digite o número do seu pedido.';return}try{navigator.clipboard&&navigator.clipboard.writeText(v)}catch(x){}te.textContent='Número copiado! É só colar na página de rastreio que abrimos para você.';window.open('https://rastreae.com.br','_blank','noopener')});
+var nlb=ft.querySelector('.lf4-nl');if(nlb){
+ var fm=nlb.querySelector('form'),er=nlb.querySelector('.lf4-err'),send=fm.querySelector('button');
+ var feedback=nl.closest('.js-newsletter')||nl.parentElement;
+ var status=function(){
+  var ok=feedback.querySelector('.alert-success'),bad=feedback.querySelector('.alert-danger,.alert-error');
+  var visible=function(n){return n&&!n.hidden&&getComputedStyle(n).display!=='none'&&n.textContent.trim()};
+  if(visible(ok)){nlb.classList.add('done');er.textContent='';send.disabled=false}
+  else if(visible(bad)){er.textContent=bad.textContent.trim();send.disabled=false}
+ };
+ new MutationObserver(status).observe(feedback,{childList:true,subtree:true,attributes:true,characterData:true});status();
+ fm.addEventListener('submit',function(e){
+  e.preventDefault();var v=fm.querySelector('input').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){er.textContent='Confere o e-mail? Parece que falta algo.';return}
+  if(window.__lfNoSubmit)return;
+  var ni=nl.querySelector('input[type=email]');if(!ni){er.textContent='Não foi possível iniciar o cadastro. Tente novamente.';return}
+  ni.value=v;ni.dispatchEvent(new Event('input',{bubbles:true}));ni.dispatchEvent(new Event('change',{bubbles:true}));
+  if(nl.checkValidity&&!nl.checkValidity()){er.textContent='Confira os dados necessários para o cadastro.';return}
+  er.textContent='Aguarde a confirmação do cadastro.';send.disabled=true;
+  try{if(nl.requestSubmit)nl.requestSubmit();else nl.submit()}catch(x){send.disabled=false;er.textContent='Não foi possível enviar o cadastro. Tente novamente.'}
+  setTimeout(function(){if(!nlb.classList.contains('done')){send.disabled=false;status()}},8000);
+ });
+}
+var tf=ft.querySelector('.lf4-tf'),ti=tf.querySelector('input'),te=ft.querySelector('.lf4-tr .lf4-err');
+ti.addEventListener('input',function(){te.textContent=''});
+tf.addEventListener('submit',function(e){
+ e.preventDefault();var v=ti.value.trim();if(v.length<3){te.textContent='Digite o código de rastreio enviado pela loja.';return}
+ te.textContent='Use este código na página de rastreio que abrimos para você.';
+ try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(function(){te.textContent='Código copiado! Cole na página de rastreio que abrimos para você.'},function(){te.textContent='Copie o código e cole na página de rastreio que abrimos para você.'})}catch(x){}
+ window.open('https://rastreae.com.br','_blank','noopener');
+});
 LF.$$('.lf3-col:not(.lf3-ct) h4',ft).forEach(function(h){h.addEventListener('click',function(){if(LF.mobile())h.parentElement.classList.toggle('op')})});
-LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!important;position:relative;margin:0!important}footer.lf-ftn>*:not(#lf-ft){position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;left:0}.newsletter-footer{display:none!important}'+
+LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!important;position:relative;margin:0!important}footer.lf-ftn>.lf-native-footer{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;left:0}.newsletter-footer{display:none!important}'+
 '#lf-ft{background:#0e0e0e;color:#bdb6ab;font-family:'+LF.BF+';border-top:1px solid rgba(201,169,97,.25)}#lf-ft *{box-sizing:border-box}'+
 '#lf-ft svg{display:block}'+
 '#lf-ft .lf4-duo{border-bottom:1px solid rgba(255,255,255,.07);background:radial-gradient(60% 120% at 25% 0%,rgba(201,169,97,.07),transparent 60%),radial-gradient(60% 120% at 80% 100%,rgba(201,169,97,.05),transparent 60%)}'+
@@ -44,6 +78,7 @@ LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!importa
 '#lf-ft .lf4-b p{font-size:13px;line-height:1.55;color:#8f897f;margin:0 0 14px}'+
 '#lf-ft .lf4-pk{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 22px;padding:0}#lf-ft .lf4-pk li{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#cfc7ba}#lf-ft .lf4-pk li:before{content:"";width:5px;height:5px;background:#c9a961;transform:rotate(45deg)}'+
 '#lf-ft .lf4-f{display:flex;align-items:center;height:48px;padding:5px 5px 5px 20px;border-radius:30px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.12);transition:border-color .4s,box-shadow .4s;margin:0}'+
+'#lf-ft .lf4-f button:disabled{opacity:.6;cursor:wait}'+
 '#lf-ft .lf4-f:focus-within{border-color:rgba(217,189,124,.7);box-shadow:0 0 0 4px rgba(201,169,97,.08)}'+
 '#lf-ft .lf4-f input{flex:1;min-width:0;height:100%;background:transparent!important;border:0!important;outline:0;box-shadow:none!important;color:#f5f0e7;font:inherit;font-size:13.5px;padding:0;margin:0}#lf-ft .lf4-f input::placeholder{color:#6c675f}'+
 '#lf-ft .lf4-f button{height:38px;padding:0 8px 0 18px;border:0;border-radius:24px;cursor:pointer;display:flex;align-items:center;gap:6px;background:linear-gradient(120deg,#b8924a,#e6cf98 50%,#b8924a);background-size:200% 100%;color:#141210;font:inherit;font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;transition:background-position .6s}#lf-ft .lf4-f button:hover{background-position:100% 0}'+

@@ -39,7 +39,6 @@ window.addEventListener('load',LF.syncMobileRows);
 
 LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){LF.prepareCardImage(c);if(c.dataset.lfc)return;var item=c.querySelector('.item')||c;var desc=c.querySelector('.item-description');if(!desc)return;c.dataset.lfc=1;c.classList.add('lf-card');
  var nm=c.querySelector('.js-item-name');if(nm){var r=LF.cleanName(nm.textContent);nm.innerHTML=(r.tags[0]?'<small class="lf-tag">'+r.tags[0]+'</small>':'')+'<span class="lf-nm">'+LF.esc(r.name)+'</span>';var imc=c.querySelector('.js-product-item-image-container-private, .item-image');if(imc&&r.badges.length&&!imc.querySelector('.lf-badge'))imc.insertAdjacentHTML('beforeend','<span class="lf-badge">'+r.badges[0]+'</span>')}
- LF.$$('span',c).forEach(function(s){if(/^\(0\)$/.test(s.textContent.trim())){var w=s.closest('.mi-w-full')||s.parentElement;w.classList.add('lf-norate')}});
  var pd=c.querySelector('.js-payment-discount-price-product-container');
  if(pd&&!/display:\s*none/.test(pd.getAttribute('style')||'')&&pd.textContent.trim()){c.classList.add('lf-haspix');LF.$$('span',pd).forEach(function(s){var t=s.textContent.trim().toLowerCase();if(t==='com')s.classList.add('lf-com');if(t==='pix'){s.classList.add('lf-pixw');s.textContent='no Pix'}})}
  var pr=c.querySelector('.js-price-display');if(pr&&c.classList.contains('lf-haspix')&&!c.querySelector('.lf-nc'))pr.insertAdjacentHTML('afterend','<em class="lf-nc">no cartão</em>');
@@ -53,6 +52,7 @@ LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(funct
 LF.add('cards',function(){LF.cardify();[300,1200,3500].forEach(function(ms){setTimeout(LF.syncMobileRows,ms)});var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(function(){LF.cardify()},120)}).observe(document.body,{childList:true,subtree:true});
 LF.css('lf-cards-css',
 '.lf-card{font-family:'+LF.BF+'}'+
+'@media(min-width:768px){html body .swiper-wrapper.swiper-mobile-only{transform:none!important}html body .swiper-wrapper.swiper-mobile-only>.js-item-product{margin-right:0!important}}'+
 '.lf-card>.item{position:relative;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px -10px rgba(40,30,15,.18),0 0 0 1px rgba(20,18,16,.035);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;height:100%;display:flex;flex-direction:column;margin:0!important}'+
 '.lf-card:hover>.item{transform:translateY(-2px);box-shadow:0 7px 18px -12px rgba(40,30,15,.22),0 0 0 1px rgba(201,169,97,.18)}'+
 '.lf-card .js-product-container{display:flex;flex-direction:column;flex:1}'+
@@ -62,7 +62,6 @@ LF.css('lf-cards-css',
 '.lf-card .js-item-name{margin:0 0 8px!important;text-transform:none!important}'+
 '.lf-card .lf-tag{display:block;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#b8924a;font-weight:500;margin-bottom:6px}'+
 '.lf-card .lf-nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;line-height:1.35;color:#141210;min-height:38px}'+
-'.lf-card .lf-norate{display:none!important}'+
 '.lf-card .item-price-container{display:flex;flex-direction:column;align-items:center;margin:auto 0 12px!important;gap:2px}'+
 '.lf-card .item-price-container>*{margin:0!important}'+
 '.lf-card .js-price-display{font-size:16px!important;font-weight:700!important;color:#141210!important}'+

@@ -18,10 +18,14 @@ var body=LF.$('section.category-body');if(body){var row=body.querySelector('.row
  if(hasF){var fd=document.createElement('div');fd.id='lf-cfd';fd.innerHTML='<div class="bk"></div><aside><div class="hd"><span>Filtrar</span><button class="x" type="button" aria-label="Fechar">'+I.x+'</button></div><div class="bd"></div></aside>';document.body.appendChild(fd);fd.querySelector('.bd').appendChild(fc);
   var op=function(){fd.classList.add('on');document.documentElement.style.overflow='hidden'},cl=function(){fd.classList.remove('on');document.documentElement.style.overflow=''};tb.querySelector('.fb').onclick=op;fd.querySelector('.bk').onclick=cl;fd.querySelector('.x').onclick=cl;
   var cnt=function(){var n=fd.querySelectorAll('input:checked').length;var b=tb.querySelector('.fc');b.textContent=n||'';b.hidden=!n};cnt();fd.addEventListener('change',cnt)}
+ /* Recife uses native sort/filter dialogs instead of the legacy select/sidebar. */
+ var nativeControls=LF.$('section.js-category-controls');
+ if(nativeControls&&!sel&&!hasF){nativeControls.classList.add('lf-native-controls');tb.style.display='none'}
  if(fs)fs.classList.add('lf-fs-off');
  var pg=body.querySelector('.js-product-table');var nav=pg&&pg.nextElementSibling;if(nav&&/de\s*\d/.test(nav.textContent)){nav.classList.add('lf-pag');var tc=nav.querySelector('.text-center');var sp=tc&&tc.querySelectorAll('span');if(sp&&sp.length>=3)tc.innerHTML='<small>Página</small><b>'+sp[0].textContent+'</b><i>de</i><span>'+sp[sp.length-1].textContent+'</span>'}
 }
 LF.css('lf-cat-css','body>div.container.lf-hid-ph,section.page-header.lf-hid-ph{display:none!important}section.js-category-controls,section.js-category-controls-prev{display:none!important}'+
+'section.js-category-controls.lf-native-controls{display:block!important;position:static!important;top:auto!important;background:#f4f2ef!important;border:0!important}'+
 '#lf-ch{background:radial-gradient(60% 120% at 50% 0%,rgba(201,169,97,.10),transparent 70%),#faf7f2;border-bottom:1px solid #efe8de;padding:44px 24px 38px;text-align:center;font-family:'+LF.BF+'}#lf-ch .ci{max-width:1120px;margin:0 auto}'+
 '#lf-ch .cb{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#9a9288;margin-bottom:18px}#lf-ch .cb a{color:#9a9288!important;text-decoration:none!important}#lf-ch .cb a:hover{color:#141210!important}#lf-ch .cb span{color:#a8843f}#lf-ch .cb i{width:4px;height:4px;background:#c9a961;transform:rotate(45deg);opacity:.7}'+
 '#lf-ch h1{font-family:'+HF+';font-weight:400;font-size:44px;line-height:1.1;color:#141210;margin:0 0 14px;text-transform:none}'+
