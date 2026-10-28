@@ -320,7 +320,6 @@ window.addEventListener('load',LF.syncMobileRows);
 
 LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(function(c){LF.prepareCardImage(c);if(c.dataset.lfc)return;var item=c.querySelector('.item')||c;var desc=c.querySelector('.item-description');if(!desc)return;c.dataset.lfc=1;c.classList.add('lf-card');
  var nm=c.querySelector('.js-item-name');if(nm){var r=LF.cleanName(nm.textContent);nm.innerHTML=(r.tags[0]?'<small class="lf-tag">'+r.tags[0]+'</small>':'')+'<span class="lf-nm">'+LF.esc(r.name)+'</span>';var imc=c.querySelector('.js-product-item-image-container-private, .item-image');if(imc&&r.badges.length&&!imc.querySelector('.lf-badge'))imc.insertAdjacentHTML('beforeend','<span class="lf-badge">'+r.badges[0]+'</span>')}
- LF.$$('span',c).forEach(function(s){if(/^\(0\)$/.test(s.textContent.trim())){var w=s.closest('.mi-w-full')||s.parentElement;w.classList.add('lf-norate')}});
  var pd=c.querySelector('.js-payment-discount-price-product-container');
  if(pd&&!/display:\s*none/.test(pd.getAttribute('style')||'')&&pd.textContent.trim()){c.classList.add('lf-haspix');LF.$$('span',pd).forEach(function(s){var t=s.textContent.trim().toLowerCase();if(t==='com')s.classList.add('lf-com');if(t==='pix'){s.classList.add('lf-pixw');s.textContent='no Pix'}})}
  var pr=c.querySelector('.js-price-display');if(pr&&c.classList.contains('lf-haspix')&&!c.querySelector('.lf-nc'))pr.insertAdjacentHTML('afterend','<em class="lf-nc">no cartão</em>');
@@ -334,6 +333,7 @@ LF.cardify=function(root){LF.$$('.js-item-product',root||document).forEach(funct
 LF.add('cards',function(){LF.cardify();[300,1200,3500].forEach(function(ms){setTimeout(LF.syncMobileRows,ms)});var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(function(){LF.cardify()},120)}).observe(document.body,{childList:true,subtree:true});
 LF.css('lf-cards-css',
 '.lf-card{font-family:'+LF.BF+'}'+
+'@media(min-width:768px){html body .swiper-wrapper.swiper-mobile-only{transform:none!important}html body .swiper-wrapper.swiper-mobile-only>.js-item-product{margin-right:0!important}}'+
 '.lf-card>.item{position:relative;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px -10px rgba(40,30,15,.18),0 0 0 1px rgba(20,18,16,.035);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;height:100%;display:flex;flex-direction:column;margin:0!important}'+
 '.lf-card:hover>.item{transform:translateY(-2px);box-shadow:0 7px 18px -12px rgba(40,30,15,.22),0 0 0 1px rgba(201,169,97,.18)}'+
 '.lf-card .js-product-container{display:flex;flex-direction:column;flex:1}'+
@@ -343,7 +343,6 @@ LF.css('lf-cards-css',
 '.lf-card .js-item-name{margin:0 0 8px!important;text-transform:none!important}'+
 '.lf-card .lf-tag{display:block;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#b8924a;font-weight:500;margin-bottom:6px}'+
 '.lf-card .lf-nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;line-height:1.35;color:#141210;min-height:38px}'+
-'.lf-card .lf-norate{display:none!important}'+
 '.lf-card .item-price-container{display:flex;flex-direction:column;align-items:center;margin:auto 0 12px!important;gap:2px}'+
 '.lf-card .item-price-container>*{margin:0!important}'+
 '.lf-card .js-price-display{font-size:16px!important;font-weight:700!important;color:#141210!important}'+
@@ -418,8 +417,7 @@ LF.add('cards-eq',function(){LF.css('lf-cardeq-css',
 '.lf-card:hover>.item{transform:none!important}'+
 '.lf-card .item-image{flex:0 0 auto}'+
 '.lf-card .js-item-name{min-height:58px;display:flex;flex-direction:column;justify-content:flex-start}'+
-'.lf-card .item-price-container{min-height:72px;justify-content:flex-end}'+
-'.lf-card .mi-w-full:not(.lf-norate){display:none!important}')})})()}catch(e){console.warn("[LF] 15-head-icons",e)}
+'.lf-card .item-price-container{min-height:72px;justify-content:flex-end}')})})()}catch(e){console.warn("[LF] 15-head-icons",e)}
 /* ---- 30-paraelas ---- */
 try{(function(){
 LF.cfg=LF.cfg||{};LF.cfg.pe={elas:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-elas.webp',eles:'https://cdn.jsdelivr.net/gh/agenciaraliss/lfimpoorts@fa69b0cf70153392da4aa5c4866d9b37ff9ad400/img/para-eles.webp'};
@@ -721,6 +719,12 @@ try{(function(){LF.add('footer',function(){
 var $=LF.$,$$=LF.$$,I=LF.ico,HF=LF.HF;var f=$('footer');if(!f||$('#lf-ft'))return;
 /* menus do painel */
 var groups=[],cur=null;$$('a',f).forEach(function(a){var h=a.getAttribute('href')||'';var t=a.textContent.trim();if(!t&&!a.querySelector('img'))return;var isHead=(!h||h==='#'||/javascript/.test(h))&&t&&!a.querySelector('img');if(isHead){cur={t:t,l:[]};groups.push(cur);return}if(cur)cur.l.push({t:t,h:h})});
+/* Current themes render headings as text, rather than anchor tags. */
+var panelGroups=[];$$('ul',f).forEach(function(ul){
+ var parent=ul.parentElement,heading=parent&&parent.querySelector(':scope > .font-big,:scope > h2,:scope > h3,:scope > h4');
+ if(!heading)return;var links=$$('a[href]',ul).map(function(a){return{t:a.textContent.trim(),h:a.getAttribute('href')}}).filter(function(a){return a.t});
+ if(links.length)panelGroups.push({t:heading.textContent.trim(),l:links});
+});if(panelGroups.length)groups=panelGroups;
 var contact=groups.filter(function(g){return /contato|atendimento/i.test(g.t)})[0];var menus=groups.filter(function(g){return g!==contact&&g.l.length&&!g.l.every(function(x){return /instagram|tiktok|facebook|youtube|pinterest|twitter/i.test(x.h)})}).slice(0,2);
 var all=$$('a',f);var phone='',mail='';all.forEach(function(a){var h=a.getAttribute('href')||'';if(/^tel:/.test(h)&&!phone)phone=a.textContent.trim();if(/^mailto:/.test(h)&&!mail)mail=h.replace('mailto:','')});
 var wa=LF.waLink();var waNum=LF.wa();var waTxt=phone||(waNum?waNum.replace(/^55(\d{2})(\d{4,5})(\d{4})$/,'$1 $2-$3'):'');
@@ -737,18 +741,46 @@ var ft=document.createElement('div');ft.id='lf-ft';
 var ck='<svg viewBox="0 0 24 24"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 ft.innerHTML='<section class="lf4-duo"><div class="lf4-in">'+
  (nl?'<div class="lf4-p lf4-nl"><div class="lf4-b"><small>Clube LF</small><h3>Novidades antes de todo mundo</h3><p>Seja a primeira a saber, direto no seu e-mail.</p><ul class="lf4-pk"><li>Lançamentos</li><li>Reposições</li><li>Cupons exclusivos</li></ul><form class="lf4-f" novalidate><input type="email" placeholder="Seu melhor e-mail" autocomplete="email" aria-label="Seu e-mail"><button type="submit"><span>Participar</span>'+I.arr+'</button></form><div class="lf4-ok">'+ck+'<span>Pronto! Você agora faz parte do Clube LF.</span></div><span class="lf4-err" aria-live="polite"></span></div></div>':'')+
- '<div class="lf4-p lf4-tr"><div class="lf4-b"><small>Rastreio Nuvem Envio</small><h3>Acompanhe sua entrega</h3><ol class="lf4-st"><li><i>'+I.check+'</i><span>Confirmado</span></li><li><i>'+I.box+'</i><span>Enviado</span></li><li><i>'+I.truck+'</i><span>A caminho</span></li><li><i><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8H4z"/><path d="M10 19v-5h4v5"/></svg></i><span>Entregue</span></li><b class="ln"><em></em></b></ol><form class="lf4-f lf4-tf" novalidate><input type="text" placeholder="Número do pedido" aria-label="Número do pedido"><button type="submit"><span>Rastrear</span>'+I.arr+'</button></form><span class="lf4-err" aria-live="polite"></span><a class="lf4-acc" href="/account/orders/">'+I.user+'<span>Tem cadastro? <b>Veja seus pedidos</b></span></a></div></div>'+
+ '<div class="lf4-p lf4-tr"><div class="lf4-b"><small>Rastreio Nuvem Envio</small><h3>Acompanhe sua entrega</h3><ol class="lf4-st"><li><i>'+I.check+'</i><span>Confirmado</span></li><li><i>'+I.box+'</i><span>Enviado</span></li><li><i>'+I.truck+'</i><span>A caminho</span></li><li><i><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8H4z"/><path d="M10 19v-5h4v5"/></svg></i><span>Entregue</span></li><b class="ln"><em></em></b></ol><form class="lf4-f lf4-tf" novalidate><input type="text" placeholder="Código de rastreio" aria-label="Código de rastreio"><button type="submit"><span>Rastrear</span>'+I.arr+'</button></form><span class="lf4-err" aria-live="polite"></span><a class="lf4-acc" href="/account/orders/">'+I.user+'<span>Tem cadastro? <b>Veja seus pedidos</b></span></a></div></div>'+
 '</div></section><div class="lf3-in"><div class="lf4-grid"><div class="lf4-brand"><a href="/" class="lf3-logo" aria-label="Início"><i></i></a><div class="lf3-soc">'+soc.map(function(s){return '<a href="'+s.h+'" target="_blank" rel="noopener" aria-label="'+s.k+'">'+SO[s.k]+'</a>'}).join('')+'</div></div>'+
  menus.map(function(g){return '<div class="lf3-col"><h4>'+LF.esc(g.t)+'</h4><ul>'+g.l.map(function(l){return '<li><a href="'+l.h+'">'+LF.esc(l.t)+'</a></li>'}).join('')+'</ul></div>'}).join('')+
  '<div class="lf3-col lf3-ct"><h4>'+LF.esc(contact?contact.t:'Atendimento').replace(/entre em contato/i,'Atendimento')+'</h4><ul>'+(wa?'<li><a href="'+wa+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9.3 8.6c.3-.6.7-.6 1-.6h.5c.2 0 .4.1.5.4l.7 1.6c.1.3 0 .5-.1.7l-.5.6c.6 1.2 1.6 2.1 2.8 2.7l.6-.5c.2-.2.5-.2.7-.1l1.6.7c.3.1.4.3.4.5v.5c0 .4-.2.8-.7 1-1 .4-2.6.1-4.3-1.4-1.6-1.5-2.4-3.1-2-4.5"/></svg><span>'+LF.esc(waTxt)+'</span></a></li>':'')+(mail?'<li><a href="mailto:'+mail+'">'+I.mail+'<span>'+LF.esc(mail)+'</span></a></li>':'')+'</ul></div></div>'+
  (pays.length?'<div class="lf3-pay"><span>Pagamento e envio</span><div class="lf3-pi">'+pays.map(function(u){return '<img src="'+u+'" alt="" loading="lazy">'}).join('')+'</div></div>':'')+
  '<div class="lf3-leg"><p><span>© '+year+' '+LF.esc(name)+'. Todos os direitos reservados.</span>'+(cnpj?'<b>·</b><span>CNPJ '+cnpj+'</span>':'')+'</p><div id="lari-wm-box"><a id="lari-wm" href="https://wa.me/message/IGGSZJCTRU67K1" target="_blank" rel="noopener" aria-label="Criado por Sites com a Lari"><span>Criado por</span><span class="lw"></span></a></div></div></div>';
-f.appendChild(ft);f.classList.add('lf-ftn');
+Array.prototype.forEach.call(f.children,function(n){if(!n.matches('.js-nubesdk-slot,[data-slot]'))n.classList.add('lf-native-footer')});f.appendChild(ft);f.classList.add('lf-ftn');
 /* comportamento */
-var nlb=ft.querySelector('.lf4-nl');if(nlb){var fm=nlb.querySelector('form'),er=nlb.querySelector('.lf4-err');fm.addEventListener('submit',function(e){e.preventDefault();var v=fm.querySelector('input').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){er.textContent='Confere o e-mail? Parece que falta algo.';return}er.textContent='';if(!window.__lfNoSubmit){var ni=nl.querySelector('input[type=email]');if(ni){ni.value=v;if(nl.requestSubmit)nl.requestSubmit();else nl.submit()}}nlb.classList.add('done')})}
-var tf=ft.querySelector('.lf4-tf'),ti=tf.querySelector('input'),te=ft.querySelector('.lf4-tr .lf4-err');ti.addEventListener('input',function(){te.textContent=''});tf.addEventListener('submit',function(e){e.preventDefault();var v=ti.value.replace(/^#/,'').trim();if(v.length<3){te.textContent='Digite o número do seu pedido.';return}try{navigator.clipboard&&navigator.clipboard.writeText(v)}catch(x){}te.textContent='Número copiado! É só colar na página de rastreio que abrimos para você.';window.open('https://rastreae.com.br','_blank','noopener')});
+var nlb=ft.querySelector('.lf4-nl');if(nlb){
+ var fm=nlb.querySelector('form'),er=nlb.querySelector('.lf4-err'),send=fm.querySelector('button');
+ var feedback=nl.closest('.js-newsletter')||nl.parentElement;
+ var status=function(){
+  var ok=feedback.querySelector('.alert-success'),bad=feedback.querySelector('.alert-danger,.alert-error');
+  var visible=function(n){return n&&!n.hidden&&getComputedStyle(n).display!=='none'&&n.textContent.trim()};
+  if(visible(ok)){nlb.classList.add('done');er.textContent='';send.disabled=false}
+  else if(visible(bad)){er.textContent=bad.textContent.trim();send.disabled=false}
+ };
+ new MutationObserver(status).observe(feedback,{childList:true,subtree:true,attributes:true,characterData:true});status();
+ fm.addEventListener('submit',function(e){
+  e.preventDefault();var v=fm.querySelector('input').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){er.textContent='Confere o e-mail? Parece que falta algo.';return}
+  if(window.__lfNoSubmit)return;
+  var ni=nl.querySelector('input[type=email]');if(!ni){er.textContent='Não foi possível iniciar o cadastro. Tente novamente.';return}
+  ni.value=v;ni.dispatchEvent(new Event('input',{bubbles:true}));ni.dispatchEvent(new Event('change',{bubbles:true}));
+  if(nl.checkValidity&&!nl.checkValidity()){er.textContent='Confira os dados necessários para o cadastro.';return}
+  er.textContent='Aguarde a confirmação do cadastro.';send.disabled=true;
+  try{if(nl.requestSubmit)nl.requestSubmit();else nl.submit()}catch(x){send.disabled=false;er.textContent='Não foi possível enviar o cadastro. Tente novamente.'}
+  setTimeout(function(){if(!nlb.classList.contains('done')){send.disabled=false;status()}},8000);
+ });
+}
+var tf=ft.querySelector('.lf4-tf'),ti=tf.querySelector('input'),te=ft.querySelector('.lf4-tr .lf4-err');
+ti.addEventListener('input',function(){te.textContent=''});
+tf.addEventListener('submit',function(e){
+ e.preventDefault();var v=ti.value.trim();if(v.length<3){te.textContent='Digite o código de rastreio enviado pela loja.';return}
+ te.textContent='Use este código na página de rastreio que abrimos para você.';
+ try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(function(){te.textContent='Código copiado! Cole na página de rastreio que abrimos para você.'},function(){te.textContent='Copie o código e cole na página de rastreio que abrimos para você.'})}catch(x){}
+ window.open('https://rastreae.com.br','_blank','noopener');
+});
 LF.$$('.lf3-col:not(.lf3-ct) h4',ft).forEach(function(h){h.addEventListener('click',function(){if(LF.mobile())h.parentElement.classList.toggle('op')})});
-LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!important;position:relative;margin:0!important}footer.lf-ftn>*:not(#lf-ft){position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;left:0}.newsletter-footer{display:none!important}'+
+LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!important;position:relative;margin:0!important}footer.lf-ftn>.lf-native-footer{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;left:0}.newsletter-footer{display:none!important}'+
 '#lf-ft{background:#0e0e0e;color:#bdb6ab;font-family:'+LF.BF+';border-top:1px solid rgba(201,169,97,.25)}#lf-ft *{box-sizing:border-box}'+
 '#lf-ft svg{display:block}'+
 '#lf-ft .lf4-duo{border-bottom:1px solid rgba(255,255,255,.07);background:radial-gradient(60% 120% at 25% 0%,rgba(201,169,97,.07),transparent 60%),radial-gradient(60% 120% at 80% 100%,rgba(201,169,97,.05),transparent 60%)}'+
@@ -762,6 +794,7 @@ LF.css('lf-ft-css','footer.lf-ftn{background:#0e0e0e!important;padding:0!importa
 '#lf-ft .lf4-b p{font-size:13px;line-height:1.55;color:#8f897f;margin:0 0 14px}'+
 '#lf-ft .lf4-pk{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 22px;padding:0}#lf-ft .lf4-pk li{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#cfc7ba}#lf-ft .lf4-pk li:before{content:"";width:5px;height:5px;background:#c9a961;transform:rotate(45deg)}'+
 '#lf-ft .lf4-f{display:flex;align-items:center;height:48px;padding:5px 5px 5px 20px;border-radius:30px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.12);transition:border-color .4s,box-shadow .4s;margin:0}'+
+'#lf-ft .lf4-f button:disabled{opacity:.6;cursor:wait}'+
 '#lf-ft .lf4-f:focus-within{border-color:rgba(217,189,124,.7);box-shadow:0 0 0 4px rgba(201,169,97,.08)}'+
 '#lf-ft .lf4-f input{flex:1;min-width:0;height:100%;background:transparent!important;border:0!important;outline:0;box-shadow:none!important;color:#f5f0e7;font:inherit;font-size:13.5px;padding:0;margin:0}#lf-ft .lf4-f input::placeholder{color:#6c675f}'+
 '#lf-ft .lf4-f button{height:38px;padding:0 8px 0 18px;border:0;border-radius:24px;cursor:pointer;display:flex;align-items:center;gap:6px;background:linear-gradient(120deg,#b8924a,#e6cf98 50%,#b8924a);background-size:200% 100%;color:#141210;font:inherit;font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;transition:background-position .6s}#lf-ft .lf4-f button:hover{background-position:100% 0}'+
@@ -1000,10 +1033,14 @@ var body=LF.$('section.category-body');if(body){var row=body.querySelector('.row
  if(hasF){var fd=document.createElement('div');fd.id='lf-cfd';fd.innerHTML='<div class="bk"></div><aside><div class="hd"><span>Filtrar</span><button class="x" type="button" aria-label="Fechar">'+I.x+'</button></div><div class="bd"></div></aside>';document.body.appendChild(fd);fd.querySelector('.bd').appendChild(fc);
   var op=function(){fd.classList.add('on');document.documentElement.style.overflow='hidden'},cl=function(){fd.classList.remove('on');document.documentElement.style.overflow=''};tb.querySelector('.fb').onclick=op;fd.querySelector('.bk').onclick=cl;fd.querySelector('.x').onclick=cl;
   var cnt=function(){var n=fd.querySelectorAll('input:checked').length;var b=tb.querySelector('.fc');b.textContent=n||'';b.hidden=!n};cnt();fd.addEventListener('change',cnt)}
+ /* Recife uses native sort/filter dialogs instead of the legacy select/sidebar. */
+ var nativeControls=LF.$('section.js-category-controls');
+ if(nativeControls&&!sel&&!hasF){nativeControls.classList.add('lf-native-controls');tb.style.display='none'}
  if(fs)fs.classList.add('lf-fs-off');
  var pg=body.querySelector('.js-product-table');var nav=pg&&pg.nextElementSibling;if(nav&&/de\s*\d/.test(nav.textContent)){nav.classList.add('lf-pag');var tc=nav.querySelector('.text-center');var sp=tc&&tc.querySelectorAll('span');if(sp&&sp.length>=3)tc.innerHTML='<small>Página</small><b>'+sp[0].textContent+'</b><i>de</i><span>'+sp[sp.length-1].textContent+'</span>'}
 }
 LF.css('lf-cat-css','body>div.container.lf-hid-ph,section.page-header.lf-hid-ph{display:none!important}section.js-category-controls,section.js-category-controls-prev{display:none!important}'+
+'section.js-category-controls.lf-native-controls{display:block!important;position:static!important;top:auto!important;background:#f4f2ef!important;border:0!important}'+
 '#lf-ch{background:radial-gradient(60% 120% at 50% 0%,rgba(201,169,97,.10),transparent 70%),#faf7f2;border-bottom:1px solid #efe8de;padding:44px 24px 38px;text-align:center;font-family:'+LF.BF+'}#lf-ch .ci{max-width:1120px;margin:0 auto}'+
 '#lf-ch .cb{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#9a9288;margin-bottom:18px}#lf-ch .cb a{color:#9a9288!important;text-decoration:none!important}#lf-ch .cb a:hover{color:#141210!important}#lf-ch .cb span{color:#a8843f}#lf-ch .cb i{width:4px;height:4px;background:#c9a961;transform:rotate(45deg);opacity:.7}'+
 '#lf-ch h1{font-family:'+HF+';font-weight:400;font-size:44px;line-height:1.1;color:#141210;margin:0 0 14px;text-transform:none}'+
@@ -1033,7 +1070,7 @@ LF.decoVariants=function(root){LF.$$('.js-product-variants-group',root).forEach(
  bs.forEach(function(b,k){var c=b.querySelector('.btn-variant-content')||b;if(c.dataset.lfv===labs[k]&&c.querySelector('.vt'))return;var full=labs[k];var m=full.match(/^(.*?\d+(?:[.,]\d+)?\s*ml)\s*[\(\-–]?\s*([^\)]*)\)?\s*$/i);var t1=full,t2='';if(m&&m[2]&&m[2].trim()){t1=m[1].trim();t2=m[2].trim()}var r=u.indexOf(vals[k]);var s=!vals[k]?0:(u.length<=1?2:Math.round(r/(u.length-1)*2)+1);b.dataset.s=s;b.title=full;
   c.innerHTML=(s?'<i class="vl"></i>':'')+'<span class="vt"><b>'+LF.esc(t1)+'</b>'+(t2?'<em>'+LF.esc(t2)+'</em>':'')+'</span>';c.dataset.lfv=full})})};
 LF.add('quickshop',function(){var m=LF.$('#quickshop-modal');if(!m||m.dataset.lf)return;m.dataset.lf=1;
- var deco=function(){LF.$$('span',m).forEach(function(s){var t=s.textContent.trim();if(/^\(0\)$/.test(t)){var w=s.closest('.mi-w-full')||s.parentElement;w.style.display='none'}if(t.toLowerCase()==='com'&&s.closest('.js-payment-discount-price-product-container'))s.style.display='none'});LF.decoVariants(m)};
+ var deco=function(){LF.$$('span',m).forEach(function(s){var t=s.textContent.trim();if(t.toLowerCase()==='com'&&s.closest('.js-payment-discount-price-product-container'))s.style.display='none'});LF.decoVariants(m)};
  var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(deco,30)}).observe(m,{childList:true,subtree:true,characterData:true});deco();
  var V=LF.vialSvg;
  LF.css('lf-qs-modal-css','#quickshop-modal{font-family:'+LF.BF+'}'+
@@ -1306,6 +1343,47 @@ var M=LF.menu();var desc=function(m){return LF.fetchDoc(m.h).then(function(d){va
 var fix=function(){var h=exi.querySelector('h3');if(!h||exi.querySelector('.dd'))return;var t=h.textContent.trim();var m=M.filter(function(x){return x.t===t})[0];var p=document.createElement('p');p.className='dd';h.after(p);if(m)desc(m).then(function(s){if(s)p.textContent=s;else p.remove()});var a=exi.querySelector('.ars');if(a&&!exi.querySelector('.dl')){var l=document.createElement('small');l.className='dl';l.textContent='Destaques';a.before(l)}};
 var fix2=function(){var l=exi.querySelector('.dl');if(l&&!exi.querySelector('.ars'))l.remove()};new MutationObserver(function(){fix();fix2()}).observe(exi,{childList:true});fix();
 LF.css('lf-dd-css','#lf-dw .exi .dd{font-size:14.5px;line-height:1.7;color:#6f685f;margin:-8px 0 22px;max-width:440px;min-height:1.7em}#lf-dw .exi .dl{margin:6px 0 14px!important;display:flex;align-items:center;gap:12px}#lf-dw .exi .dl:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,97,.5),transparent)}#lf-dw .ars{margin-top:0!important}#lf-dw .all{margin-bottom:30px!important}')})})()}catch(e){console.warn("[LF] 9C-drawer-desc",e)}
+/* ---- 9D-apps-compat ---- */
+try{(function(){LF.add('apps-compat',function(){
+/* Preserve actual app slot nodes, including listeners and late SDK mounts.
+   Native shopping forms and their anti-bot controls stay in their original place. */
+var selector='[data-slot]',timer;
+var area=function(parent,key,before){
+ var box=parent.querySelector(':scope > .lf-app-area[data-lf-area="'+key+'"]');
+ if(!box){box=document.createElement('div');box.className='lf-app-area';box.dataset.lfArea=key;parent.insertBefore(box,before||null)}
+ return box;
+};
+var preserve=function(){
+ var pp=LF.$('#lf-pp'),inf=pp&&pp.querySelector('.inf');
+ var scopes=LF.$$('#single-product .lf-hide-native,header.lf-nat-head,footer>.lf-native-footer');
+ scopes.forEach(function(scope){
+  var nodes=LF.$$(selector,scope).filter(function(n){var p=n.parentElement;while(p&&p!==scope){if(p.matches(selector))return false;p=p.parentElement}return true});
+  nodes.forEach(function(n){
+   /* Do not move forms protected by reCAPTCHA or Turnstile. */
+   if(n.querySelector('.g-recaptcha,.cf-turnstile,iframe[src*="recaptcha"],iframe[src*="challenges.cloudflare"]'))return;
+   var key=n.getAttribute('data-slot')||n.getAttribute('data-nubesdk-slot')||'',dest;
+   if(scope.closest('#single-product')){
+    if(!pp||!inf||document.body.classList.contains('lf-vip-landing'))return;
+    if(/description|product_bottom|product_after_content/.test(key))dest=area(pp.querySelector('.pi'),'product-details');
+    else if(/before_title/.test(key))dest=area(inf,'product-before-title',inf.querySelector('h1'));
+    else if(/title/.test(key))dest=area(inf,'product-title',inf.querySelector('.fam,.pr'));
+    else if(/price/.test(key))dest=area(inf,'product-price',inf.querySelector('.vr,.buy'));
+    else if(/cart|buy|variant/.test(key))dest=area(inf,'product-buy',inf.querySelector('.shp,.acc'));
+    else dest=area(pp.querySelector('.pi'),'product-details');
+   }else if(scope.matches('header.lf-nat-head')){
+    var head=LF.$('#lf-head');if(head)dest=area(head,'header-apps');
+   }else{
+    var footer=LF.$('#lf-ft');if(footer)dest=area(footer,'footer-apps');
+   }
+   if(dest)dest.appendChild(n);
+  });
+ });
+};
+LF.preserveAppSlots=preserve;
+preserve();
+new MutationObserver(function(ms){if(ms.some(function(m){return m.addedNodes.length})){clearTimeout(timer);timer=setTimeout(preserve,80)}}).observe(document.body,{childList:true,subtree:true});
+LF.css('lf-apps-css','.lf-app-area{min-width:0;max-width:100%;height:auto}.lf-app-area:empty{display:none}.lf-app-area[data-lf-area="product-details"]{margin-top:28px}.lf-app-area[data-lf-area="product-title"]{margin:6px 0 12px}.lf-app-area [data-slot],.lf-app-area .js-nubesdk-slot{max-width:100%}');
+})})()}catch(e){console.warn("[LF] 9D-apps-compat",e)}
 window.LF&&LF.run&&LF.run();
 }finally{show()}
 };
